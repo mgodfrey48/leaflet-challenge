@@ -3,6 +3,10 @@ body {
   margin: 0;
 }
 
+h4 {
+  margin: 2px
+}
+
 #map,
 body,
 html {

@@ -24,6 +24,7 @@ function createMarkers(response) {
             return "#cc2900";
         } 
     };
+    
     // Loop through each earthquake and store the latitudes, longitudes, depths and magnitudes in markers
     let earthquakes = response.features;
     earthquakes.forEach(earthquake => {
@@ -72,8 +73,10 @@ function createMap(earthquakes) {
     legend.onAdd = function (map) {
 
         var div = L.DomUtil.create('div', 'info legend'),
-            grades = [-10, 10, 30, 50, 70, 90],
-            labels = ["red", "orange", "yellow", "green", "blue", "purple"];
+            grades = [-10, 10, 30, 50, 70, 90];
+
+        // Add a legend title
+        div.innerHTML = '<h4> Earthquake Depth (meters)</h4>'
 
         // loop through our density intervals and generate a label with a colored square for each interval
         for (var i = 0; i < grades.length; i++) {
@@ -100,6 +103,6 @@ function createMap(earthquakes) {
             return "#cc2900";
         } 
     };
-
+    // Add legend to map
     legend.addTo(map);
 }
