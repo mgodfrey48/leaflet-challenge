@@ -9,7 +9,7 @@ function createMarkers(response) {
     quakeMarkers = [];
 
     // Function to set the marker color
-    function markerColor(depth) {
+    function getColor(depth) {
         if (depth >= -10 && depth < 10) {
             return "#bfff80";
         } else if (depth >= 10 && depth < 30) {
@@ -24,7 +24,6 @@ function createMarkers(response) {
             return "#cc2900";
         } 
     };
-
     // Loop through each earthquake and store the latitudes, longitudes, depths and magnitudes in markers
     let earthquakes = response.features;
     earthquakes.forEach(earthquake => {
@@ -37,11 +36,11 @@ function createMarkers(response) {
         quakeMarker = L.circleMarker([lat, lon], {
             color: "black",
             weight: 1,
-            fillColor: markerColor(depth),
+            fillColor: getColor(depth),
             fillOpacity: .5,
             radius: size * 4
         });
-        console.log(markerColor(depth))
+
         quakeMarkers.push(quakeMarker);
     });
 
@@ -65,4 +64,42 @@ function createMap(earthquakes) {
         zoom: 5,
         layers: [lightMap, earthquakes]
     });
+    // Add a legend
+    var legend = L.control({
+        position: 'bottomright'
+    });
+
+    legend.onAdd = function (map) {
+
+        var div = L.DomUtil.create('div', 'info legend'),
+            grades = [-10, 10, 30, 50, 70, 90],
+            labels = ["red", "orange", "yellow", "green", "blue", "purple"];
+
+        // loop through our density intervals and generate a label with a colored square for each interval
+        for (var i = 0; i < grades.length; i++) {
+            div.innerHTML +=
+                '<i style="background:' + rangeColor(grades[i] + 1) + '"></i> ' +
+                grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+        }
+        return div;
+    };
+    
+    // Function to set the marker color
+    function rangeColor(depth) {
+        if (depth >= -10 && depth < 10) {
+            return "#bfff80";
+        } else if (depth >= 10 && depth < 30) {
+            return "#ffff80";
+        } else if (depth >= 30 && depth < 50) {
+            return "#ffcc99";
+        } else if (depth >= 50 && depth < 70) {
+            return "#ff9933";
+        } else if (depth >= 70 && depth < 90) {
+            return "#e65c00";
+        } else if (depth >= 90) {
+            return "#cc2900";
+        } 
+    };
+
+    legend.addTo(map);
 }
